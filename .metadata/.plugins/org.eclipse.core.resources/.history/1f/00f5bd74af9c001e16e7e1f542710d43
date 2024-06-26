@@ -1,0 +1,35 @@
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.web.SecurityFilterChain;
+
+@Configuration
+@EnableWebSecurity
+public class SeguridadConfiguracion extends WebSecurityConfigurerAdapter {
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+            .authorizeRequests((authz) -> authz
+                .requestMatchers("/", "/listarLibros").permitAll()
+                .requestMatchers("/agregarLibro").hasRole("ADMIN")
+                .requestMatchers("/mostrarLibro").hasRole("ADMIN")
+                .requestMatchers("/guardarLibro").hasRole("ADMIN")
+                .requestMatchers("/editarLibro").hasRole("ADMIN")
+                .requestMatchers("/eliminarLibro/*").hasRole("ADMIN")
+                .requestMatchers("/", "/listarPrestamos").permitAll()
+                .requestMatchers("/agregarPrestamo").hasRole("ADMIN")
+                .requestMatchers("/mostrarPrestamo").hasRole("ADMIN")
+                .requestMatchers("/guardarPrestamo").hasRole("ADMIN")
+                .requestMatchers("/editarPrestamo").hasRole("ADMIN")
+                .requestMatchers("/eliminarPrestamo/*").hasRole("ADMIN")
+                .anyRequest().authenticated()
+            )
+            .formLogin((form) -> form.permitAll())
+            .exceptionHandling()
+                .accessDeniedPage("/error-403") // Redirige a la página de error personalizada
+            .and()
+            .logout((logout) -> logout.permitAll());
+    }
+}

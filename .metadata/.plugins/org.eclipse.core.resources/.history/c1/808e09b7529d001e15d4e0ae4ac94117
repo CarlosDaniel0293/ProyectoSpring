@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragmentos/header :: head">
+    <!-- Agrega las dependencias de Materialize -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</head>
+
+<link rel="stylesheet" type="text/css" th:href="@{/css/estilo-libros.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/estilo.css}" />
+
+<body>
+    <div th:insert="/fragmentos/header :: menu"> </div>
+    <br>
+    <div class="container mt-4">
+        <a href="/agregarLibro" class="btn btn-large waves-effect waves-light">Agregar Nuevo Libro</a>
+        <br>
+        <div class="row">
+            <div class="col s8">
+                <table class="responsive-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>TÍTULO</th>
+                            <th>AUTOR</th>
+                            <th>EDITORIAL</th>
+                            <th>AÑO DE PUBLICACIÓN</th>
+                            <th>GÉNERO</th>
+                            <th>ACCIONES</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Datos existentes de la tabla -->
+                        <tr th:each="libro : ${libros}">
+                            <td th:text="${libro.id}"></td>
+                            <td th:text="${libro.nombre}"></td>
+                            <td th:text="${libro.autor}"></td>
+                            <td th:text="${libro.editorial}"></td>
+                            <td th:text="${libro.anioPublicacion}"></td>
+                            <td th:text="${libro.genero}"></td>
+                            <td>
+                                <a th:href="@{/editarLibro/}+${libro.id}" class="btn btn-small waves-effect waves-light green">Editar</i></a>
+                                <a th:onClick="eliminar([[${libro.id}]])" class="btn btn-small waves-effect waves-light red">Eliminar</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col s4">
+                <div class="card">
+                    <div class="card-content">
+                        <span class="card-title">Total de Libros Registrados</span>
+                        <p th:text="${#lists.size(libros)}"></p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-content">
+                        <span class="card-title">Total de Libros por Género</span>
+                        <ul>
+                            <li th:each="entry : ${totalLibrosPorGenero != null ? totalLibrosPorGenero.entrySet() : {}}"
+                                th:text="${entry != null ? entry.key + ': ' + entry.value : ''}"></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="funciones.js"></script>
+
+    <!-- Inicializa los componentes de Materialize -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            M.AutoInit();
+        });
+    </script>
+</body>
+
+</html>
